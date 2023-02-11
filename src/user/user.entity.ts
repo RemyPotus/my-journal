@@ -1,5 +1,5 @@
 import { Entity, Column, ObjectIdColumn, OneToMany } from 'typeorm';
-import { Journal } from '../journal/journal.entity';
+// import { Journal } from '../journal/journal.entity';
 @Entity({ name: 'users' })
 export class User {
   @ObjectIdColumn()
@@ -14,9 +14,15 @@ export class User {
   @Column()
   email: string;
 
+  @Column()
+  password: string;
+
+  @Column()
+  creationDate: Date;
+
   @Column({ default: true })
   isActive: boolean;
 
-  @OneToMany(() => Journal, (journal) => journal.userUID)
-  journals: Journal[];
+  // @OneToMany(() => Journal, (journal) => journal.userUID)
+  // journals: Journal[];
 }
