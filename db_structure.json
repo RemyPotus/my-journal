@@ -5,7 +5,6 @@
             "content": [
                 {
                     "_id": "63e5330a06a86511d46d22fc",
-                    "docRef": "aeSdMn2sWRseQrAMD3nU",
                     "userUID": "sdqdgjzqFSQdqf",
                     "name": "My fitness journal",
                     "lastUpdate": "7 février 2023 à 00:00:00 UTC+1",
@@ -37,6 +36,20 @@
                     ]
                 }
             ]
-        }
+        },
+    {
+        "name": "users",
+        "content": [
+            {
+                "_id": "63e5330a06a86511d46d22fc",
+                "firstname": "Rémy",
+                "lastname": "Potus",
+                "password": "sdqgazqfzqhgaqfqs",
+                "email": "remy.potus.work@gmail.com",
+                "isActive": true,
+                "creationDate": "7 février 2023 à 00:00:00 UTC+1"
+            }
+        ]
+    }
     ]
 }
