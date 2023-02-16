@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository } from 'typeorm';
+import { MongoRepository, ObjectID } from 'typeorm';
 import { CreateUserDto } from './user.dto';
 import { User } from './user.entity';
 
@@ -16,7 +16,7 @@ export class UserService {
   }
 
   findOne(id: string): Promise<User | null> {
-    return this.userRepository.findOneBy({ _id: id });
+    return this.userRepository.findOneBy({ _id: new ObjectID(id) });
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -41,6 +41,6 @@ export class UserService {
   }
 
   async remove(id: string): Promise<void> {
-    await this.userRepository.delete({ _id: id });
+    await this.userRepository.delete({ _id: new ObjectID(id) });
   }
 }

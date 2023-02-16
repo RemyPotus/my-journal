@@ -14,7 +14,8 @@
                         {
                             "_id": "wtTUULkF7nMBeecOKoa8",
                             "date": "7 février 2023 à 00:00:00 UTC+1",
-                            "Fitness" : [
+                            "name": "Fitness",
+                            "comments" : [
                                 {
                                     "_id": "kSFEwvsi9vQGYzAH4Z4R",
                                     "date": "7 février 2023 à 00:00:00 UTC+1",
@@ -25,7 +26,8 @@
                         {
                             "_id": "sWxh9k49nkyJkR7ip7sU",
                             "date": "7 février 2023 à 00:00:00 UTC+1",
-                            "Nourriture" : [
+                            "name": "Nourriture",
+                            "comments" : [
                                 {
                                     "_id": "cgsLP6ZJCUimjN9pJB7F",
                                     "date": "7 février 2023 à 00:00:00 UTC+1",
