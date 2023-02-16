@@ -1,5 +1,3 @@
-import { Timestamp } from 'typeorm';
-
 export class CreateJournalDto {
   userUID: string;
   name: string;
@@ -9,8 +7,8 @@ export class UpdateJournalDto {
   id: string;
   userUID?: string;
   name?: string;
-  lastUpdate?: Timestamp;
-  creationDate?: Timestamp;
+  lastUpdate?: Date;
+  creationDate?: Date;
   status?: string;
   categories?: CategorieDto[];
 }
@@ -18,12 +16,14 @@ export class UpdateJournalDto {
 export class CategorieDto {
   id: string;
   name: string;
-  lastUpdate: Timestamp;
+  lastUpdate: Date;
   comments: CommentDto[];
+  journalId: string;
 }
 
 export class CommentDto {
   id: string;
-  date: Timestamp;
-  text: string[];
+  date: Date;
+  texts: string[];
+  categoryId: string;
 }

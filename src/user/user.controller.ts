@@ -1,15 +1,8 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Param,
-  Req,
-  Body,
-  Response,
-} from '@nestjs/common';
+import { Controller, Post, Body, Response } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, LoginDto } from './user.dto';
 import { User } from './user.entity';
+import { Prisma } from '@prisma/client';
 
 @Controller('users')
 export class UserController {
@@ -26,9 +19,8 @@ export class UserController {
     if (!userLoggingIn.email || !userLoggingIn.password) {
       return res.status(400).send({ message: 'Missing email or password.' });
     }
-    const user: User | null = await this.userService.findByEmail(
-      userLoggingIn.email,
-    );
+    const user: any = await this.userService.findByEmail(userLoggingIn.email);
+
     if (user === null) {
       return res.status(404).json({ message: 'No matching email found.' });
     } else {
@@ -49,18 +41,24 @@ export class UserController {
    */
   @Post('/register')
   async register(@Body() createUser: CreateUserDto, @Response() res: any) {
-    const user: User | null = await this.userService.findByEmail(
+    const userAlreadyExist: User | null = await this.userService.findByEmail(
       createUser.email,
     );
-    if (user === null) {
+    if (userAlreadyExist === null) {
       try {
-        const newUser: boolean = await this.userService.create(createUser);
+        const body: Prisma.UsersCreateInput = {
+          ...createUser,
+          creationDate: new Date(Date.now()),
+          isActive: true,
+        };
+        const newUser: boolean = await this.userService.create(body);
         if (newUser) {
           return res
             .status(200)
             .json({ message: 'New user successfully created.' });
         }
       } catch (e) {
+        console.log(e);
         return res.status(500).json({ message: e });
       }
     } else {
