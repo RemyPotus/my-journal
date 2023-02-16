@@ -1,9 +1,9 @@
-import { Entity, Column, ObjectIdColumn } from 'typeorm';
+import { Entity, Column, ObjectID, ObjectIdColumn } from 'typeorm';
 
 @Entity({ name: 'journals' })
 export class Journal {
   @ObjectIdColumn()
-  _id: string;
+  id: ObjectID;
 
   @Column()
   userUID: string;
