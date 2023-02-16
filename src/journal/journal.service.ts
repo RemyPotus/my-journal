@@ -1,57 +1,51 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, InsertOneWriteOpResult, MongoRepository } from 'typeorm';
 import { Journal } from './journal.entity';
-import { CreateJournalDto, UpdateJournalDto } from './journal.dto';
+import { prisma } from '../main';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class JournalService {
-  constructor(
-    @InjectRepository(Journal)
-    private journalRepository: MongoRepository<Journal>,
-  ) {}
-
-  async getJournalsByUserUID(uid: string): Promise<Journal[]> {
-    return this.journalRepository.findBy({ userUID: uid });
+  async getJournalsByUserUID(userId: string): Promise<Journal[]> {
+    const journals: Journal[] = await prisma.journals.findMany({
+      where: {
+        userId: userId,
+      },
+    });
+    return journals;
   }
 
   async findOne(id: string): Promise<Journal | null> {
-    return this.journalRepository.findOneBy({ id });
+    const journal = await prisma.journals.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    return journal;
   }
 
-  async updateOne(updateJournal: UpdateJournalDto): Promise<Journal | null> {
-    const currentJournal: any | null = await this.findOne(updateJournal.id);
-    let updatedJournal = null;
-    if (currentJournal) {
-      console.log(currentJournal);
-      const toBeUpdated: Omit<UpdateJournalDto, 'id'> = updateJournal;
-      const oldJournal: any = currentJournal;
-      oldJournal.id = currentJournal._id.toString();
-      console.log(oldJournal.id);
-      updatedJournal = await this.journalRepository.save({
-        ...oldJournal,
-        ...toBeUpdated,
-      });
-    }
-
-    return updatedJournal;
+  async updateOne(
+    id: string,
+    updateJournal: Prisma.JournalsUpdateInput,
+  ): Promise<Journal | null> {
+    const journal = await prisma.journals.update({
+      where: {
+        id: id,
+      },
+      data: updateJournal,
+    });
+    return journal;
   }
 
-  async createJournal(body: CreateJournalDto): Promise<InsertOneWriteOpResult> {
-    const newJournal: InsertOneWriteOpResult =
-      await this.journalRepository.insertOne({
-        ...body,
-        ...{
-          lastUpdate: Date.now(),
-          creationDate: Date.now(),
-          status: 'active',
-          categories: [],
-        },
-      });
+  async createJournal(body: Prisma.JournalsCreateInput): Promise<Journal> {
+    const newJournal = await prisma.journals.create({ data: body });
     return newJournal;
   }
 
-  async removeJournal(id: string): Promise<DeleteResult> {
-    return this.journalRepository.delete(id);
+  async removeJournal(id: string): Promise<Journal> {
+    return await prisma.journals.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 }

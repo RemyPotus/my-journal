@@ -1,46 +1,47 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository, ObjectID } from 'typeorm';
-import { CreateUserDto } from './user.dto';
 import { User } from './user.entity';
+import { prisma } from '../main';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(User)
-    private userRepository: MongoRepository<User>,
-  ) {}
-
   findAll(): Promise<User[]> {
-    return this.userRepository.find();
+    return prisma.users.findMany();
   }
 
-  findOne(id: string): Promise<User | null> {
-    return this.userRepository.findOneBy({ _id: new ObjectID(id) });
+  findOne(id: string): Promise<any> {
+    const users: any = prisma.users.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    return users;
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const user: User | null = await this.userRepository.findOneBy({
-      email: { $eq: email },
+    const user: User | null = await prisma.users.findFirst({
+      where: {
+        email: email,
+      },
     });
     return user;
   }
-
-  async create(body: CreateUserDto): Promise<boolean> {
-    const userCreated = await this.userRepository.insertOne({
-      ...body,
-      creationDate: Date.now(),
-      isActive: true,
+  // Omit<Prisma.UsersCountAggregateOutputType, 'password' | '_all'>
+  async create(body: Prisma.UsersCreateInput): Promise<boolean> {
+    const userCreated = await prisma.users.create({
+      data: body,
     });
-
-    if (userCreated.ops.length !== undefined) {
+    if (userCreated) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   }
 
-  async remove(id: string): Promise<void> {
-    await this.userRepository.delete({ _id: new ObjectID(id) });
+  async remove(id: string): Promise<User> {
+    return await prisma.users.delete({
+      where: {
+        id: id,
+      },
+    });
   }
 }
