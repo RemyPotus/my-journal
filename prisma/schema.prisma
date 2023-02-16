@@ -1,0 +1,52 @@
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider       = "prisma-client-js"
+  previeFeatures = ["mongodb"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  firstName    String     @db.String
+  lastName     String     @db.String
+  email        String     @db.String
+  password     String     @db.String
+  creationDate DateTime   @db.Timestamp
+  isActive     Boolean    @db.Bool
+  journals     Journals[]
+
+  @@unique([id, email])
+}
+
+model Journals {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  name          String       @db.String
+  status        String       @db.String
+  lastUpdate    DateTime     @db.Timestamp
+  creation_date DateTime     @db.Timestamp
+  categories    Categories[]
+  user          Users        @relation(fields: [userId], references: [id])
+  userId        String       @db.ObjectId
+}
+
+model Categories {
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  name       String     @db.String
+  lastUpdate DateTime   @db.Timestamp
+  comments   Comments[]
+  journal    Journals   @relation(fields: [journalId], references: [id])
+  journalId  String     @db.ObjectId
+}
+
+model Comments {
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  date       DateTime?  @db.Timestamp
+  texts      String[]
+  category   Categories @relation(fields: [categoryId], references: [id])
+  categoryId String     @db.ObjectId
+}
