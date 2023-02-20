@@ -36,8 +36,16 @@ export class JournalService {
     return journal;
   }
 
-  async createJournal(body: Prisma.JournalsCreateInput): Promise<Journal> {
-    const newJournal = await prisma.journals.create({ data: body });
+  async createJournal(
+    body: Omit<Prisma.JournalsCreateInput, 'user'>,
+    userId: string,
+  ): Promise<Journal> {
+    const newJournal = await prisma.journals.create({
+      data: {
+        ...body,
+        user: { connect: { id: userId } },
+      },
+    });
     return newJournal;
   }
 
