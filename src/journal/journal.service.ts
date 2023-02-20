@@ -49,7 +49,7 @@ export class JournalService {
     return newJournal;
   }
 
-  async removeJournal(id: string): Promise<Journal> {
+  async deleteJournal(id: string): Promise<Journal> {
     return await prisma.journals.delete({
       where: {
         id: id,

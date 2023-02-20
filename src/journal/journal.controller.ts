@@ -1,6 +1,15 @@
-import { Controller, Get, Post, Param, Body, Response } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Body,
+  Response,
+  Delete,
+} from '@nestjs/common';
 import { JournalService } from './journal.service';
 import { CreateJournalDto, UpdateJournalDto } from './journal.dto';
+import { Prisma } from '@prisma/client';
 
 @Controller('journals')
 export class JournalController {
@@ -57,23 +66,47 @@ export class JournalController {
     }
   }
 
-  // @Post('/update')
-  // async updateJournal(
-  //   @Body() updateJournal: UpdateJournalDto,
-  //   @Response() res: any,
-  // ) {
-  //   try {
-  //     const updateResult = await this.journalService.updateOne(updateJournal);
-  //     console.log(updateResult);
+  @Post('/update')
+  async updateJournal(
+    @Body() updateJournal: UpdateJournalDto,
+    @Response() res: any,
+  ) {
+    try {
+      const data: Prisma.JournalsUpdateInput = {
+        name: updateJournal.name,
+        status: updateJournal.status,
+        lastUpdate: new Date(Date.now()),
+      };
+      const updateResult = await this.journalService.updateOne(
+        updateJournal.id,
+        data,
+      );
 
-  //     // if (updateResult.value) {
-  //     //   return res.status(200).json(updateResult.value);
-  //     // } else {
-  //     return res.status(404).json({ message: 'Journal not found' });
-  //     // }
-  //   } catch (e) {
-  //     console.log(e);
-  //     return res.status(500).json({ message: e });
-  //   }
-  // }
+      if (updateResult) {
+        return res.status(200).json(updateResult);
+      } else {
+        return res.status(404).json({ message: 'Journal not found' });
+      }
+    } catch (e) {
+      console.log(e);
+      return res.status(500).json({ message: e });
+    }
+  }
+
+  @Delete(':journalId')
+  async deleteJournal(
+    @Param('journalId') journalId: string,
+    @Response() res: any,
+  ) {
+    try {
+      await this.journalService.deleteJournal(journalId);
+      return res.status(200).json({ message: 'Journal deleted' });
+    } catch (e) {
+      if (e.code === 'P2025') {
+        return res.status(404).json({ message: 'Journal not found.' });
+      } else {
+        return res.status(500).json({ message: e });
+      }
+    }
+  }
 }
