@@ -28,26 +28,34 @@ export class JournalController {
     }
   }
 
-  // @Post('/create')
-  // async createJournal(
-  //   @Body() createJournal: CreateJournalDto,
-  //   @Response() res: any,
-  // ) {
-  //   try {
-  //     const journalCreated = await this.journalService.createJournal(
-  //       createJournal,
-  //     );
-  //     if (journalCreated.ops) {
-  //       return res.status(200).json(journalCreated.ops);
-  //     } else {
-  //       return res
-  //         .status(500)
-  //         .json({ message: 'Unkown error during creation' });
-  //     }
-  //   } catch (e) {
-  //     return res.status(500).json({ message: e });
-  //   }
-  // }
+  @Post('/create')
+  async createJournal(
+    @Body() createJournal: CreateJournalDto,
+    @Response() res: any,
+  ) {
+    try {
+      const data = {
+        name: createJournal.name,
+        status: 'active',
+        creationDate: new Date(Date.now()),
+        lastUpdate: new Date(Date.now()),
+      };
+
+      const journalCreated = await this.journalService.createJournal(
+        data,
+        createJournal.userId,
+      );
+      if (journalCreated) {
+        return res.status(200).json(journalCreated);
+      } else {
+        return res
+          .status(500)
+          .json({ message: 'Unkown error during creation' });
+      }
+    } catch (e) {
+      return res.status(500).json({ message: e });
+    }
+  }
 
   // @Post('/update')
   // async updateJournal(

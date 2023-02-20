@@ -25,8 +25,8 @@ export class UserController {
       return res.status(404).json({ message: 'No matching email found.' });
     } else {
       if (user.password === userLoggingIn.password) {
-        const userInfo: Omit<User, 'password'> = user;
-        return res.status(200).json({ userInfo });
+        delete user['password'];
+        return res.status(200).json({ user });
       } else {
         return res.status(401).json({ message: 'Invalid password or email.' });
       }

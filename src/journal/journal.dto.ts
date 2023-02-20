@@ -1,11 +1,11 @@
 export class CreateJournalDto {
-  userUID: string;
+  userId: string;
   name: string;
 }
 
 export class UpdateJournalDto {
   id: string;
-  userUID?: string;
+  userId?: string;
   name?: string;
   lastUpdate?: Date;
   creationDate?: Date;
