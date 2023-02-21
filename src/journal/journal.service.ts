@@ -56,4 +56,32 @@ export class JournalService {
       },
     });
   }
+
+  async upsertCategorie(journalId: string, body: any): Promise<Journal> {
+    // const currentCategories = await prisma.journals.findFirst({
+    //   select: {
+    //     categories: true,
+    //   },
+    //   where: {
+    //     id: journalId,
+    //   },
+    // });
+
+    // currentCategories?.categories.filter((c: any) => {
+    //   if(c.id === body.id)
+    // });
+
+    const newCategory = await prisma.journals.update({
+      where: {
+        id: journalId,
+      },
+      data: {
+        lastUpdate: new Date(Date.now()),
+        categories: {
+          push: body,
+        },
+      },
+    });
+    return newCategory;
+  }
 }

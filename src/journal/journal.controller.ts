@@ -8,7 +8,11 @@ import {
   Delete,
 } from '@nestjs/common';
 import { JournalService } from './journal.service';
-import { CreateJournalDto, UpdateJournalDto } from './journal.dto';
+import {
+  CreateJournalDto,
+  UpdateJournalDto,
+  UpsertCategorieDto,
+} from './journal.dto';
 import { Prisma } from '@prisma/client';
 
 @Controller('journals')
@@ -102,6 +106,29 @@ export class JournalController {
       await this.journalService.deleteJournal(journalId);
       return res.status(200).json({ message: 'Journal deleted' });
     } catch (e) {
+      if (e.code === 'P2025') {
+        return res.status(404).json({ message: 'Journal not found.' });
+      } else {
+        return res.status(500).json({ message: e });
+      }
+    }
+  }
+
+  @Post(':journalId/upsert-category')
+  async upsertCategorie(
+    @Param('journalId') journalId: string,
+    @Body() upsertCategory: UpsertCategorieDto,
+    @Response() res: any,
+  ) {
+    upsertCategory = { lastUpdate: new Date(Date.now()), ...upsertCategory };
+    try {
+      const newCategory = await this.journalService.upsertCategorie(
+        journalId,
+        upsertCategory,
+      );
+      return res.status(200).json(newCategory);
+    } catch (e) {
+      console.log(e);
       if (e.code === 'P2025') {
         return res.status(404).json({ message: 'Journal not found.' });
       } else {

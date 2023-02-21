@@ -8,3 +8,9 @@ export class UpdateJournalDto {
   name?: string;
   status?: string;
 }
+
+export class UpsertCategorieDto {
+  name: string;
+  id?: string;
+  lastUpdate?: Date;
+}
