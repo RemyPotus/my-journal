@@ -88,7 +88,6 @@ export class JournalController {
         return res.status(404).json({ message: 'Journal not found' });
       }
     } catch (e) {
-      console.log(e);
       return res.status(500).json({ message: e });
     }
   }

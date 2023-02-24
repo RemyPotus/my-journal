@@ -5,11 +5,21 @@ import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class JournalService {
+  private fieldsToBeSelected = {
+    id: true,
+    name: true,
+    status: true,
+    lastUpdate: true,
+    creationDate: true,
+    categories: true,
+  };
+
   async getJournalsByUserUID(userId: string): Promise<Journal[]> {
     const journals: Journal[] = await prisma.journals.findMany({
       where: {
         userId: userId,
       },
+      select: this.fieldsToBeSelected,
     });
     return journals;
   }
@@ -19,6 +29,7 @@ export class JournalService {
       where: {
         id: id,
       },
+      select: this.fieldsToBeSelected,
     });
     return journal;
   }
@@ -31,6 +42,7 @@ export class JournalService {
       where: {
         id: id,
       },
+      select: this.fieldsToBeSelected,
       data: updateJournal,
     });
     return journal;
