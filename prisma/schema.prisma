@@ -30,7 +30,7 @@ model Journals {
   lastUpdate   DateTime     @db.Timestamp
   creationDate DateTime     @db.Timestamp
   categories   Categories[]
-  user         Users        @relation(fields: [userId], references: [id])
+  user         Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String       @map("_userId") @db.ObjectId
 }
 
@@ -39,7 +39,7 @@ model Categories {
   name       String     @db.String
   lastUpdate DateTime   @db.Timestamp
   comments   Comments[]
-  journal    Journals   @relation(fields: [journalId], references: [id])
+  journal    Journals   @relation(fields: [journalId], references: [id], onDelete: Cascade)
   journalId  String     @db.ObjectId
 }
 
@@ -47,6 +47,6 @@ model Comments {
   id         String     @id @default(auto()) @map("_id") @db.ObjectId
   date       DateTime?  @db.Timestamp
   texts      String[]
-  category   Categories @relation(fields: [categoryId], references: [id])
+  category   Categories @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId String     @db.ObjectId
 }
