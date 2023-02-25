@@ -15,7 +15,7 @@ export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 
   @Get(':journalId')
-  async getCategories(
+  async getCategoriesByJournal(
     @Param('journalId') journalId: string,
     @Response() res: any,
   ) {

@@ -15,21 +15,21 @@ import { Prisma } from '@prisma/client';
 export class JournalController {
   constructor(private journalService: JournalService) {}
 
-  @Get('/by-user/:userUID')
-  async getJournalsByUserUID(
-    @Param('userUID') userUID: string,
+  @Get('/by-user/:userId')
+  async getJournalsByUserId(
+    @Param('userId') userId: string,
     @Response() res: any,
   ) {
-    const journals = await this.journalService.getJournalsByUserUID(userUID);
+    const journals = await this.journalService.getJournalsByUserUID(userId);
     return res.status(200).json({ journals });
   }
 
-  @Get(':journalUID')
+  @Get(':journalId')
   async getJournal(
-    @Param('journalUID') journalUID: string,
+    @Param('journalId') journalId: string,
     @Response() res: any,
   ) {
-    const journal = await this.journalService.findOne(journalUID);
+    const journal = await this.journalService.findOne(journalId);
     if (journal !== null) {
       return res.status(200).json({ journal });
     } else {

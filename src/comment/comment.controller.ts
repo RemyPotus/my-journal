@@ -15,7 +15,7 @@ export class CommentController {
   constructor(private commentService: CommentService) {}
 
   @Get(':categoryId')
-  async getComments(
+  async getCommentsByCategory(
     @Param('categoryId') categoryId: string,
     @Response() res: any,
   ) {
