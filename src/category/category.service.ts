@@ -12,6 +12,11 @@ export class CategoryService {
     comments: true,
   };
 
+  /**
+   * Returns all categories & comments for a given journal
+   * @param journalId
+   * @returns
+   */
   async findAll(journalId: string): Promise<Category[] | null> {
     const categories = await prisma.categories.findMany({
       where: {
